@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthContext } from "./context/AuthContext";
+import { useAuth } from "./hooks/useAuth";
+import {
+  Home,
+  Login,
+  Layout,
+  NoPage,
+  User,
+  Product,
+  Inbox,
+  AddProduct,
+  EditProduct,
+} from "./pages";
+export default function App() {
+  const { user, login, logout, setUser } = useAuth();
 
-function App() {
+  console.log("render app");
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AuthContext.Provider value={{ user, setUser }}>
+      {!user.authToken ? (
+        <Login />
+      ) : (
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="inbox" element={<Inbox />} />
+              <Route path="product" element={<Product />} />
+              <Route path="user" element={<User />} />
+              <Route path="/addProduct" element={<AddProduct />} />
+              <Route path="/edit/:productId" element={<EditProduct />} />
+              <Route path="*" element={<NoPage />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      )}
+    </AuthContext.Provider>
   );
 }
-
-export default App;
