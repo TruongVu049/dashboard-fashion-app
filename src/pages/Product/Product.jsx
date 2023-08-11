@@ -8,19 +8,22 @@ const Product = () => {
   const [productList, setProductList] = useState([]);
 
   useEffect(() => {
+    let ignore = false;
     axios
       .get("http://localhost:5000/api/products")
       .then((res) => {
-        setProductList(res.data);
+        if (!ignore) setProductList(res.data);
       })
       .catch((err) => console.log(err));
+
+    return () => (ignore = true);
   }, []);
 
   function handleDeleteProduct(productId) {
-    axios
-      .delete(`http://localhost:5000/api/product/${productId}`)
-      .then((res) => {})
-      .catch((err) => console.log(err));
+    // axios
+    //   .delete(`http://localhost:5000/api/product/${productId}`)
+    //   .then((res) => {})
+    //   .catch((err) => console.log(err));
   }
 
   console.log(productList);

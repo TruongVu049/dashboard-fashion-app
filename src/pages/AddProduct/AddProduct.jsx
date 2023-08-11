@@ -1,18 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { UploadImg, TodoList } from "../../components";
+import { UploadImg, TodoList, ProductVariants } from "../../components";
 import axios from "axios";
 const AddProduct = () => {
   const [imgList, setImgList] = useState([]);
-  const [sizeList, setSizeList] = useState([]);
-  const [colorList, setColorList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
-
-  function handleSetSizeList(value) {
-    setSizeList((prev) => [...prev, value]);
-  }
-  function handleSetColorList(value) {
-    setColorList((prev) => [...prev, value]);
-  }
+  const [options, setOptions] = useState([]);
+  console.log(options);
   useEffect(() => {
     console.log("useEffect");
     axios
@@ -22,7 +15,6 @@ const AddProduct = () => {
       })
       .catch((err) => console.log(err));
   }, []);
-  console.log(sizeList);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -35,10 +27,9 @@ const AddProduct = () => {
       product_desc: formJson.desc,
       images: imgList.join("@"),
       brand: formJson.brand,
-      colors: colorList.join("@"),
       price: parseInt(formJson.price),
-      sizes: sizeList.join("@"),
       sex: formJson.sex,
+      options: options,
     };
     axios
       .post("http://localhost:5000/api/product", product)
@@ -179,16 +170,7 @@ const AddProduct = () => {
                   </div>
                 </div>
 
-                <TodoList
-                  name={"size"}
-                  dataList={sizeList}
-                  onSetValue={handleSetSizeList}
-                />
-                <TodoList
-                  name={"color"}
-                  dataList={colorList}
-                  onSetValue={handleSetColorList}
-                />
+                <ProductVariants options={options} setOptions={setOptions} />
 
                 <UploadImg
                   title={"Ảnh 1"}
